@@ -1,0 +1,108 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{% block title %}{% endblock %}Company</title>
+        
+        <link rel="stylesheet" type='text/css' href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.css">
+        <!--Chart js-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+
+        <script src="{% static 'scripts/main.js' %}"></script>
+    </head>
+
+    <body>
+        <nav class="navbar is-light">
+            <div class="navbar-brand">
+                <a href="/" class="navbar-item"><strong>Company</strong></a>
+
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="main-navbar">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div class="navbar-menu" id="main-navbar">
+                <div class="navbar-item">
+                    <div class="navbar-start">
+                        <form method="GET" action="{% url 'search' %}">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input type="text" class="input" placeholder="Search..." name="query">
+                                </div>
+                                <div class="control">
+                                    <button class="ui button primary">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="navbar-end">
+                    {% for category in menu_categories %}
+                        <a href="{% url 'category' category.slug%}" class="navbar-item">{{ category.title }}</a>
+                    {% endfor %}
+                    <a href="{% url 'contact' %}" class="navbar-item">Contact</a>
+
+                    <div class="navbar-item">
+                        <a href="{% url 'cart' %}" class="ui button primary">Cart{% if cart %}({{ cart|length }}){% endif %}</a>
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+
+        <section class="section">
+            <div class="container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </section>
+
+        <footer class="footer">
+            <h3 class="is-size-4 mb-4">Seller</h3>
+            {% if request.user.is_seller %}
+                <a href="{% url 'seller_admin' %}" class="ui button primary">Seller Admin</a>
+                <a href="{% url 'logout' %}" class="ui button primary">Logout</a>
+            {% else %}
+                <a href="{% url 'become_seller' %}" class="ui button primary">Become Seller</a>
+                <a href="{% url 'login_view' %}" class="ui button primary">Login Seller</a>
+            {% endif %}
+        </footer>
+
+        <footer class="footer">
+            <h3 class="is-size-4 mb-4">User</h3>
+            {% if request.user.is_user %}
+                <a href="http://127.0.0.1:8000/accounts/profile/" class="ui button primary">Profile</a>
+                <a href="{% url 'logout' %}" class="ui button primary">Logout</a>
+            {% else %}
+                <a href="http://127.0.0.1:8000/accounts/signup/" class="ui button primary">Signup</a>
+                <a href="{% url 'user_login_views' %}" class="ui button primary">Login</a>
+            {% endif %}
+        </footer>
+
+        <footer class="footer">
+            <h3 class="is-size-4 mb-4">Delivery</h3>
+            {% if request.user.is_agent %}
+                <a href="{% url 'agent_admin' %}" class="ui button primary">Delivery Admin</a>
+                <a href="{% url 'logout' %}" class="ui button primary">Logout</a>
+            {% else %}
+                <a href="{% url 'become_agent' %}" class="ui button primary">Become Delivery Agent</a>
+                <a href="{% url 'agent_login_view' %}" class="ui button primary">Login Delivery</a>
+            {% endif %}
+        </footer>
+
+
+</html>

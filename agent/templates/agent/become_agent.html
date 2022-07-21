@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Become Seller | {% endblock %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+    <p>You are logged in!</p>
+    <a href="{% url 'logout' %}">Logout</a>
+{% else %}
+    {% load crispy_forms_tags %}
+
+
+    <div class="content-section col-md-8 col-md-offset-2">
+        <form method="POST" class="ui form">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                {{ form|crispy}}
+            </fieldset>
+            <h1></h1>
+            <button class="ui button primary" type="submit">Sign Up</button>
+            <br />
+        </form>
+    </div>
+        <h1></h1>
+        <h2 class="subtitle">Already have an Account?</h2>
+        <a href="{% url 'agent_login_view' %}">Log in</a>
+
+{% endif %}
+
+{% endblock %}

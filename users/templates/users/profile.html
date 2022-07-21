@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Log in | {% endblock %}
+
+{% block content %}
+<div class="box">
+    <h2 class="is-size-4">Name - {{ user.first_name }} {{ user.last_name }}</h1>
+    <h2 class="is-size-4">Username - {{ user.username }}</h1>
+    <h2 class="is-size-4">Email - {{ user.email }}</h1>
+    <h2 class="is-size-4">Phone - {{ user.phone }}</h1>
+    <h1>      </h1>
+</div>
+<div class="box">
+    <h2 class="is-size-3 mb-4">My orders</h2>
+
+    {% if orders %}
+        {% for order in orders %}
+            <div class="{% if order.fully_paid %}has-background-success-light{% else %}has-background-info-light{% endif %} mb-2 p-4">
+                <div class="columns is-multiline">
+
+                    <div class="column is-12">
+                        <tbody>
+                            {% for item in order.items.all %}
+                                {% if order.is_delivered %}
+                                <h3 class="is-size-4">{{ item.product.title }} - {{ item.order.date }}</h3>
+                                <h1 class="ui button primary">Delivery Status - Delivered</h1>
+                                {% if order.is_replaced %}
+                                    <h1 class="ui button primary">Order Replacement is On The Way</h1>
+                                {% else %}
+                                    <a href="http://127.0.0.1:8000/accounts/{{ order.id }}/askForRefund/" class="ui button primary">Ask For Refund</a>
+                                {% endif %}
+                                {% else %}
+                                <h3 class="is-size-4">{{ item.product.title }} - {{ item.order.date }}</h3>
+                                <h1 class="ui button primary">Delivery Status - On The Way</h1>
+                                <h1>Seller - {{ item.seller.firstname }} {{ item.seller.lastname }}</h1>
+                                <h1>Delivery Agent Email - {{ item.seller.agent.email }}</h1>
+                                <h1>Delivery Agent Phone - {{ item.seller.agent.phone }}</h1>
+                                {% endif %}
+                                    <h4 class="is-size-4">&emsp;</h4>
+                                    <tr>
+                                        
+                                        <img src="{{ item.product.get_thumbnail }}">
+                                        
+                                        <p></p>
+                                        <td>₹{{ item.product.price }}</td>
+                                    </tr>
+                                    <h4 class="is-size-4">&emsp;</h4>
+                                    <h4 class="is-size-4">&emsp;</h4>
+                            {% endfor %}
+                        </tbody>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}

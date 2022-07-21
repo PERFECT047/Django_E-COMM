@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Welcome | {% endblock %}
+
+{% block content %}
+    {% if product.image %}
+    <body style="margin: 0px; background: #ffffff; height: 100%">
+        <img style="-webkit-user-select: none;margin: auto;cursor: zoom-in;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" src="{{ product.image.url }}" width="207" height="207">
+    </body>
+    {% endif %}
+    
+    <h1 class="title">{{ product.title }}, ₹{{ product.price }} </h1>
+
+    <p>Seller Name - {{ product.seller.firstname }} {{ product.seller.lastname }}</p>
+    <p>Seller Email - {{ product.seller.email }}</p>
+    <p>Seller Phone - {{ product.seller.phone }}</p>
+    <p>Seller Address - {{ product.seller.address }}</p>
+
+
+    <p>{{ product.descripton }}</p>
+
+    <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="notification is-success is-toast">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action=".">
+
+        {% csrf_token %}
+        <div class="field has-addons">
+            <div class="control">
+                <input type="number" name="quantity" value="1" class="input" min="1">
+            </div>
+            <div class="control">
+                <button class="ui button primary">Add to Cart</button>
+            </div>
+        </div>
+    </form>
+
+    {% if similar_products %}
+        <hr>
+
+        <div class="columns is-multiline">
+            <div class="column is-12">
+                <h2 class="subtitle">Simillar Products</h2>
+            </div>
+    
+            {% for product in similar_products %}
+                <div class="column is-3 product-list-item">
+                    <div class="box">
+                        <body style="margin: 0px; background: #0e0e0e; height: 100%">
+                            <img style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" src="{{ product.image.url }}" width="207" height="191">
+                        </body>
+                
+                        <h2 class="subtitle">{{ product.title }}</h2>
+                
+                        <h3 class="subtitle is-size-6 mb-5">₹{{ product.price }}</h3>
+                
+                        <hr>
+                
+                        <a href="{% url 'product'  product.category.slug product.slug%}" class="ui button primary">View</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+        

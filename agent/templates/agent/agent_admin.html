@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Seller Admin | {% endblock %}
+
+{% block content %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <form method="POST" action="">{% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+    </form>
+
+    <div class="box">
+        <h1 class="title">Agent Admin - {{ agent.name }}</h1>
+        <a href="{% url 'logout' %}" class="ui button primary">Log out</a>
+    </div>
+
+    <div class="box">
+        <h2 class="is-size-3 mb-4">Orders to be Delivered</h2>
+    
+        {% if orders %}
+            {% for order in orders %}
+                <div class="has-background-success-light has-background-info-light mb-2 p-4">
+                    <div class="columns is-multiline">
+    
+                        <div class="column is-12">
+                            <h1 class="is-size-5"><b>Customer Details - </b></h1>
+                            <h1></h1>
+                            <b>Customer Name:</b> {{ order.first_name }} {{ order.last_name }}<br>
+                            <b>Customer Address:</b> {{ order.address }}<br>
+                            <b>Customer Zip & City:</b> {{ order.zipcode }} & {{ order.place }}<br>
+                            <b>Customer E-mail:</b> {{ order.email }}<br>
+                            <b>Customer Phone:</b> {{ order.phone }}
+                            {% if order.is_user_verified %}
+                                <h1 class="ui button pattern">Customer Verified</h1>
+                            {% else %}
+                                <a href="http://127.0.0.1:8000/agent/confirm_delivery/{{ order.id }}" class="ui button form">Send Confirmation Link</a>
+                            {% endif %}
+
+                            {% if order.is_delivered %}
+                                <h1 class="ui button pattern">Delivery Status - Delivered</h1>
+                            {% else %}
+                                <h1 class="ui button pattern">Delivery Status - On The Way</h1>
+                            {% endif %}
+
+
+                            <h1 class="is-size-5"><b>Seller Details - </b></h1>
+                            <h1></h1>
+                            
+    
+                            <table class="table is-fullwidth mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Paid</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+    
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                            <b>Seller Name:</b> {{ item.product.seller.firstname }} {{ item.product.seller.lastname }}<br>
+                                            <b>Seller Address:</b> {{ item.product.seller.address }}<br>
+                                            <b>Seller City:</b> {{ order.place }}<br>
+                                            <b>Seller E-mail:</b> {{ item.product.seller.email }}<br>
+                                            <b>Seller Phone:</b> {{ item.product.seller.phone }}
+                                            <tr>
+                                                <td>{{ item.product.title }}</td>
+                                                <td>₹{{ item.product.price }}</td>
+                                                <td>{{ item.quantity }}</td>
+                                                <td>{{ item.seller_paid|yesno:"Yes,No" }}</td>
+                                                <td>₹{{ item.get_total_price }}</td>
+                                                
+                                            </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+{% endblock %}

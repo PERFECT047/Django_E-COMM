@@ -1,0 +1,5 @@
+django
+django-utils-six
+pillow
+django-crispy-forms
+vincenty

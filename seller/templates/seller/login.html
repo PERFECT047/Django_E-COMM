@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Log in | {% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated and request.user.is_seller %}
+        <p>You are logged in!</p>
+        <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <h1 class="title">Log in</h1>
+
+        <form method="post" action="." class="ui form">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="field">
+                <div class="control">
+                    <button class="ui button primary">Log in</button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+
+{% endblock %}
